@@ -28,10 +28,10 @@ app.get('/todo/getall', (req, res) => {
 });
 
 app.post('/todo/add', (req, res) => {
-    const { titleItem } = req.body;
-    const { categoryItem } = req.body;
-    const { isCompletedItem } = req.body;
-    const sql = `INSERT INTO item (titleItem, categoryItem, isCompletedItem) VALUES ('${titleItem}', '${categoryItem}', '${isCompletedItem}')`;
+    const { text } = req.body;
+    const { category } = req.body;
+    const { isCompleted } = req.body;
+    const sql = `INSERT INTO item (text, category, isCompleted) VALUES ('${text}', '${category}', '${isCompleted}')`;
     db.query(sql, (err, data) => {
         if(err) {
             return res.json(err);
@@ -40,14 +40,14 @@ app.post('/todo/add', (req, res) => {
     });
 }); 
 
-app.post('/todo/completed/:id', (req, res) => {
-    sql =`SELECT * FROM item WHERE idItem = ${req.params.id}`;
+app.put('/todo/completed/:id', (req, res) => {
+    sql =`SELECT * FROM item WHERE id = ${req.params.id}`;
     db.query(sql, (err, data) => {
         if(err) {
             return res.json(err);
         }
-        const isCompletedItem = data[0].isCompletedItem === 0 ? 1 : 0;
-        const sql = `UPDATE item SET isCompletedItem = ${isCompletedItem} WHERE idItem = ${req.params.id}`;
+        const isCompleted = data[0].isCompleted === 0 ? 1 : 0;
+        const sql = `UPDATE item SET isCompleted = ${isCompleted} WHERE id = ${req.params.id}`;
         db.query(sql, (err, data) => {
             if(err) {
                 return res.json(err);
@@ -57,8 +57,8 @@ app.post('/todo/completed/:id', (req, res) => {
     });
 });
 
-app.get('/todo/delete/:id', (req, res) => {
-    const sql = `DELETE FROM item WHERE idItem = ${req.params.id}`;
+app.delete('/todo/delete/:id', (req, res) => {
+    const sql = `DELETE FROM item WHERE id = ${req.params.id}`;
     db.query(sql, (err, data) => {
         if(err) {
             return res.json(err);
